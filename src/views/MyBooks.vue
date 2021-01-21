@@ -9,6 +9,8 @@ el-drawer(title="Фильтры" v-model='state.filterBarActive' size="350px")
           i.header-icon.el-icon-place
       el-select(v-model='state.filter.typeId' clearable placeholder="выбрать тип")
         el-option(:key='index' :value='typeOption.value' :label='typeOption.text' v-for='typeOption, index in typeOptions')
+    el-col(:lg="22" :sm="12" :xs="24")
+      el-input(suffix-icon="search" placeholder='Поиск по названию / автору' v-model='state.filter.search' )
     //- el-collapse-item(name='2')
     el-button(icon='el-icon-check' type="success" plain @click='applyFilter') Применить
 //- диалоговое окно добавления новой книги (по умолчанию скрыто)
@@ -258,7 +260,8 @@ export default {
        }}
     ))
     const bookFilterType = computed(() => state.filter.typeId)
-    watch(bookFilterType, () => {
+    const searchFilterType = computed(() => state.filter.search)
+    watch(bookFilterType, searchFilterType, () => {
       setUrl()
       /* if (newValue.length > 0){
         state.isSuggestionsShown = true
@@ -299,7 +302,8 @@ export default {
       store.dispatch('clearBooks')
     })
     function setUrl () {
-      router.push({ path: 'my-books', query: { type: state.filter.typeId } })
+      //type: state.filter.typeId  ,
+      router.push({ path: 'my-books', query: {type: state.filter.typeId, search: state.filter.search} })
     }
     // пользователь выбрал страну из предложенного списка
     function countryItemSelected (selectedCountry) {
